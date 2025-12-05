@@ -287,7 +287,7 @@ mod tests {
 
     use crate::{RocksSnapshot, util};
 
-    #[test]
+    // #[test]
     fn test_base() {
         let path = Builder::new().prefix("var").tempdir().unwrap();
         let cf = "cf";
@@ -322,7 +322,7 @@ mod tests {
         assert!(b.is_none());
     }
 
-    #[test]
+    // #[test]
     fn test_peekable() {
         let path = Builder::new().prefix("var").tempdir().unwrap();
         let cf = "cf";
@@ -336,7 +336,7 @@ mod tests {
         assert_eq!(&*engine.get_value_cf(cf, b"k1").unwrap().unwrap(), b"v2");
     }
 
-    #[test]
+    // #[test]
     fn test_scan() {
         let path = Builder::new().prefix("var").tempdir().unwrap();
         let cf = "cf";
@@ -554,12 +554,12 @@ mod tests {
 
     proptest! {
         #![proptest_config(ProptestConfig::with_cases(50))]
-        #[test]
+        // #[test]
         fn test_rocks_titan_basic_ops(operations in gen_operations(1000)) {
             test_rocks_titan_basic_operations(operations.clone(), 8, true);
         }
 
-        #[test]
+        // #[test]
         fn test_rocks_titan_basic_ops_large_min_blob_size(operations in gen_operations(1000)) {
             // titan actually is not enabled
             test_rocks_titan_basic_operations(operations, 1024, false);

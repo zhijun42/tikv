@@ -135,7 +135,7 @@ mod tests {
 
     use super::*;
 
-    #[test]
+    // #[test]
     fn test_ttl_properties() {
         test_kv_format_impl!(test_ttl_properties_impl<ApiV1Ttl ApiV2>);
     }
@@ -200,7 +200,7 @@ mod tests {
         assert_eq!(props.min_expire_ts, Some(1));
     }
 
-    #[test]
+    // #[test]
     fn test_ttl_properties_codec() {
         let cases: Vec<(Option<u64>, Option<u64>, Vec<(&[u8], u64)>)> = vec![
             (

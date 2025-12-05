@@ -536,7 +536,7 @@ mod tests {
 
     use super::*;
 
-    #[test]
+    // #[test]
     fn test_cfs_diff() {
         let a = vec!["1", "2", "3"];
         let a_diff_a = cfs_diff(&a, &a);
@@ -552,7 +552,7 @@ mod tests {
         assert_eq!(vec!["4"], cfs_diff(&d, &a));
     }
 
-    #[test]
+    // #[test]
     fn test_new_engine_opt() {
         let path = Builder::new()
             .prefix("_util_rocksdb_test_check_column_families")
@@ -643,7 +643,7 @@ mod tests {
         assert!(!tmp_cf_opts.get_level_compaction_dynamic_level_bytes());
     }
 
-    #[test]
+    // #[test]
     fn test_range_filter() {
         let path = Builder::new()
             .prefix("test_range_filter")

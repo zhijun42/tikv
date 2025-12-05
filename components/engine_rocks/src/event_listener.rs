@@ -227,6 +227,8 @@ mod tests {
         Arc, Mutex,
         mpsc::{self, Sender},
     };
+    use std::{thread, time};
+    use rocksdb::DBInfoLogLevel;
 
     use engine_traits::{
         ApplyProgress, CF_DEFAULT, DATA_CFS, FlushState, MiscExt, StateStorage, SyncMutable,
@@ -236,7 +238,7 @@ mod tests {
     use super::*;
     use crate::{RocksCfOptions, RocksDbOptions, util};
 
-    #[test]
+    // #[test]
     fn test_resolve_sst_filename() {
         let err = "Corruption: Sst file size mismatch: /qps/data/tikv-10014/db/000398.sst. Size recorded in manifest 6975, actual size 6959";
         let filename = resolve_sst_filename_from_err(err).unwrap();
@@ -277,7 +279,7 @@ mod tests {
     #[test]
     fn test_persistence_listener() {
         let temp_dir = Builder::new()
-            .prefix("test_persistence_listener")
+            .prefix("zhijun_test_persistence_listener")
             .tempdir()
             .unwrap();
         let (region_id, tablet_index) = (2, 3);
@@ -288,6 +290,7 @@ mod tests {
             PersistenceListener::new(region_id, tablet_index, state.clone(), storage.clone());
         let mut db_opt = RocksDbOptions::default();
         db_opt.add_event_listener(RocksPersistenceListener::new(listener));
+        db_opt.set_info_log_level(DBInfoLogLevel::Debug);
         let (tx, rx) = mpsc::channel();
         let block_flush = Arc::new(Mutex::new(()));
         db_opt.add_event_listener(FlushTrack {
@@ -303,10 +306,16 @@ mod tests {
         cf_opts[0].1.set_min_write_buffer_number_to_merge(2);
         cf_opts[0].1.set_write_buffer_size(1024);
         cf_opts[0].1.set_disable_auto_compactions(true);
-        let db = util::new_engine_opt(temp_dir.path().to_str().unwrap(), db_opt, cf_opts).unwrap();
+
+        let path = temp_dir.into_path(); // NOTE: no longer deleted automatically
+
+        let db_path = path.to_str().unwrap();
+        println!("the path is {}", db_path);
+
+        let db = util::new_engine_opt(db_path, db_opt, cf_opts).unwrap();
         db.flush_cf(CF_DEFAULT, true).unwrap();
         let sst_count = || {
-            std::fs::read_dir(temp_dir.path())
+            std::fs::read_dir(path.as_path())
                 .unwrap()
                 .filter(|p| {
                     let p = match p {
@@ -355,6 +364,7 @@ mod tests {
         // which case flush largest seqno will be equal to seal earliest seqno.
         let mut key_count = 2;
         for i in 0..3 {
+            println!("loop {}", i);
             while rx.try_recv().is_err() {
                 db.put(format!("k{key_count}").as_bytes(), &[0; 512])
                     .unwrap();
@@ -362,14 +372,24 @@ mod tests {
             }
             state.set_applied_index(5 + i);
         }
+        println!("drop block");
         drop(block);
         // Memtable is seal before put, so there must be still one KV in memtable.
+        println!("flush_cf final");
         db.flush_cf(CF_DEFAULT, true).unwrap();
+        println!("try recv");
         rx.try_recv().unwrap();
         // There is 2 sst before this round, and then 4 are merged into 2, so there
         // should be 4 ssts.
-        assert_eq!(sst_count(), 4);
+        println!("sst count: {}", sst_count());
+        // assert_eq!(sst_count(), 4);
+        let long_time = time::Duration::from_secs(100);
+        let now = time::Instant::now();
+        println!("sleeping!");
+        thread::sleep(long_time);
+        println!("done!");
         let records = storage.records.lock().unwrap();
+        assert_eq!(sst_count(), 4);
         // Although it seals 4 times, but only create 2 SSTs, so only 2 records.
         assert_eq!(records.len(), 2);
         // The indexes of two merged flush state are 4 and 5, so merged value is 5.

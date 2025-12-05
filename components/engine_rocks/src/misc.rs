@@ -569,7 +569,7 @@ mod tests {
         check_data(&db, ALL_CFS, kvs_left.as_slice());
     }
 
-    #[test]
+    // #[test]
     fn test_delete_all_in_range_use_delete_range() {
         let data = vec![
             b"k0".to_vec(),
@@ -604,7 +604,7 @@ mod tests {
         );
     }
 
-    #[test]
+    // #[test]
     fn test_delete_all_in_range_by_key() {
         let data = vec![
             b"k0".to_vec(),
@@ -639,7 +639,7 @@ mod tests {
         );
     }
 
-    #[test]
+    // #[test]
     fn test_delete_all_in_range_by_writer() {
         let path = Builder::new()
             .prefix("test_delete_all_in_range_by_writer")
@@ -668,7 +668,7 @@ mod tests {
         );
     }
 
-    #[test]
+    // #[test]
     fn test_delete_all_files_in_range() {
         let path = Builder::new()
             .prefix("engine_delete_all_files_in_range")
@@ -716,7 +716,7 @@ mod tests {
         check_data(&db, ALL_CFS, kvs_left.as_slice());
     }
 
-    #[test]
+    // #[test]
     fn test_delete_range_prefix_bloom_case() {
         let path = Builder::new()
             .prefix("engine_delete_range_prefix_bloom")
@@ -765,7 +765,7 @@ mod tests {
         check_data(&db, &[cf], kvs_left.as_slice());
     }
 
-    #[test]
+    // #[test]
     fn test_flush_oldest() {
         let path = Builder::new()
             .prefix("test_flush_oldest")

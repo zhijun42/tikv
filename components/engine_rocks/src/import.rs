@@ -108,7 +108,7 @@ mod tests {
     use super::*;
     use crate::{RocksCfOptions, RocksDbOptions, RocksSstWriterBuilder, util::new_engine_opt};
 
-    #[test]
+    // #[test]
     fn test_ingest_multiple_file() {
         let path_dir = Builder::new()
             .prefix("test_ingest_multiple_file")

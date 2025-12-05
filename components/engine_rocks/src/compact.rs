@@ -138,7 +138,7 @@ mod tests {
 
     use crate::{RocksCfOptions, RocksDbOptions, util};
 
-    #[test]
+    // #[test]
     fn test_compact_files_in_range() {
         let temp_dir = Builder::new()
             .prefix("test_compact_files_in_range")

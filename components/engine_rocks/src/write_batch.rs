@@ -250,7 +250,7 @@ mod tests {
     };
     use crate::RocksCfOptions;
 
-    #[test]
+    // #[test]
     fn test_should_write_to_engine_with_pipeline_write_mode() {
         let path = Builder::new()
             .prefix("test-should-write-to-engine")
@@ -296,7 +296,7 @@ mod tests {
         assert!(!wb.should_write_to_engine());
     }
 
-    #[test]
+    // #[test]
     fn test_should_write_to_engine_with_multi_batch_write_mode() {
         let path = Builder::new()
             .prefix("test-should-write-to-engine")

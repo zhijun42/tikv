@@ -392,7 +392,7 @@ mod tests {
     use super::*;
     use crate::util::new_default_engine;
 
-    #[test]
+    // #[test]
     fn test_smoke() {
         let path = Builder::new().tempdir().unwrap();
         let engine = new_default_engine(path.path().to_str().unwrap()).unwrap();

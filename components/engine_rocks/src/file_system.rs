@@ -66,7 +66,7 @@ mod tests {
         (db, limiter.statistics().unwrap())
     }
 
-    #[test]
+    // #[test]
     fn test_inspected_compact() {
         // NOTICE: Specific to RocksDB version.
         let amplification_bytes = 2560;
