@@ -131,6 +131,7 @@ mod imp {
     use std::{io, ptr};
 
     use libc::*;
+    use mach2::traps::mach_task_self;
 
     pub fn current() -> io::Result<super::LinuxStyleCpuTime> {
         // There's scant little documentation on `host_processor_info`
@@ -172,7 +173,7 @@ mod imp {
                 ret.nice += (*current).cpu_ticks[CPU_STATE_NICE as usize] as u64;
                 current = current.offset(1);
             }
-            vm_deallocate(mach_task_self_, cpu_info as vm_address_t, msg_type as usize);
+            vm_deallocate(mach_task_self(), cpu_info as vm_address_t, msg_type as usize);
             Ok(ret)
         }
     }
